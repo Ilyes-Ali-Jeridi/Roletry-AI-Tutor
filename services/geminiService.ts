@@ -5,10 +5,13 @@ let lessonSession: Chat | null = null;
 let qaSession: Chat | null = null;
 
 // Safely resolve the API key in different environments.
+// - Vite replaces import.meta.env.VITE_* variables at build time
 // - Google AI Studio or the host may inject GEMINI_API_KEY or API_KEY on globalThis.
-// - Vite/build tools may replace process.env.GEMINI_API_KEY or process.env.API_KEY.
 // - In the browser, `process` might be undefined, so we must guard against it.
 const resolveApiKey = (): string => {
+  const viteKey = import.meta.env.VITE_GEMINI_API_KEY || "";
+  if (viteKey) return viteKey;
+
   const g = (globalThis as any) || {};
 
   const fromGlobal =
